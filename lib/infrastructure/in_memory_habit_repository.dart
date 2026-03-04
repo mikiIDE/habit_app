@@ -11,7 +11,7 @@ class InMemoryHabitRepository implements HabitRepository {
 
   @override
   Future<List<Habit>> fetchHabits() async {
-    return _habits;
+    return List.of(_habits);
   }
 
   @override
