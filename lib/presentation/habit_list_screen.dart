@@ -1,16 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habit_app/provider/habit_list_notifier.dart';
 
-class HabitListScreen extends StatefulWidget {
+class HabitListScreen extends ConsumerWidget {
   const HabitListScreen({super.key});
 
   @override
-  State<HabitListScreen> createState() => _HabitListScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Notifierから習慣リストを取得（変更があれば自動で再描画）
+    final habits = ref.watch(habitListProvider);
 
-class _HabitListScreenState extends State<HabitListScreen> {
-  // ダミーデータ
-  final List<String> _habits = ['運動', '読書', '瞑想'];
-  void _showAddHabitDialog() {
+    return Scaffold(
+      appBar: AppBar(title: const Text('習慣リスト')),
+      body: ListView.builder(
+        itemCount: habits.length,
+        itemBuilder: (context, index) {
+          final habit = habits[index];
+          return ListTile(
+            title: Text(habit.title),
+            // チェックボタンで完了にする
+            trailing: IconButton(
+              icon: const Icon(Icons.check),
+              onPressed: () {
+                ref.read(habitListProvider.notifier).completeHabit(habit);
+              },
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddHabitDialog(context, ref),
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  // 追加ダイアログ
+  void _showAddHabitDialog(BuildContext context, WidgetRef ref) {
     final textController = TextEditingController();
 
     showDialog(
@@ -31,9 +57,8 @@ class _HabitListScreenState extends State<HabitListScreen> {
               onPressed: () {
                 final title = textController.text;
                 if (title.isNotEmpty) {
-                  setState(() {
-                    _habits.add(title);
-                  });
+                  // Notifier経由でUseCaseを呼ぶ
+                  ref.read(habitListProvider.notifier).addHabit(title);
                 }
                 Navigator.pop(context);
               },
@@ -42,23 +67,6 @@ class _HabitListScreenState extends State<HabitListScreen> {
           ],
         );
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('習慣リスト')),
-      body: ListView.builder(
-        itemCount: _habits.length,
-        itemBuilder: (context, index) {
-          return ListTile(title: Text(_habits[index]));
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddHabitDialog,
-        child: const Icon(Icons.add),
-      ),
     );
   }
 }
