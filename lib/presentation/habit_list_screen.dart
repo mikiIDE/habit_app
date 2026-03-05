@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_app/provider/habit_list_notifier.dart';
+import 'package:habit_app/domain/entity/habit.dart';
 
 class HabitListScreen extends ConsumerWidget {
   const HabitListScreen({super.key});
@@ -17,7 +18,15 @@ class HabitListScreen extends ConsumerWidget {
         itemBuilder: (context, index) {
           final habit = habits[index];
           return ListTile(
-            title: Text(habit.title),
+            title: Text(
+              habit.title,
+              style: habit.status == HabitStatus.completed
+                  ? TextStyle(
+                      decoration: TextDecoration.lineThrough,
+                      color: Colors.grey,
+                    )
+                  : null,
+            ),
             // チェックボタンで完了にする
             trailing: IconButton(
               icon: const Icon(Icons.check),
