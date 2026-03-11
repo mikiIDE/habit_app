@@ -28,11 +28,22 @@ class HabitListScreen extends ConsumerWidget {
                   : null,
             ),
             // チェックボタンで完了にする
-            trailing: IconButton(
-              icon: const Icon(Icons.check),
-              onPressed: () {
-                ref.read(habitListProvider.notifier).completeHabit(habit);
-              },
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.check),
+                  onPressed: () {
+                    ref.read(habitListProvider.notifier).completeHabit(habit);
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    ref.read(habitListProvider.notifier).deleteHabit(habit.id);
+                  },
+                ),
+              ],
             ),
           );
         },

@@ -42,4 +42,11 @@ class SharedPreferencesHabitRepository implements HabitRepository {
     final jsonString = jsonEncode(habits.map((h) => h.toJson()).toList());
     await prefs.setString(_key, jsonString); // SharedPreferencesに保存
   }
+
+  @override
+  Future<void> deleteHabit(String id) async {
+    final habits = await fetchHabits(); // 全件取得
+    habits.removeWhere((h) => h.id == id); // idが一致するものを削除
+    await _save(habits); // 全件上書き
+  }
 }

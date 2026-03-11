@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_app/application/add_habit_usecase.dart';
+import 'package:habit_app/application/delete_habit_usecase.dart';
 import 'package:habit_app/application/fetch_habit_usecase.dart';
 import 'package:habit_app/application/complete_habit_usecase.dart';
 import 'package:habit_app/provider/habit_repository_provider.dart';
@@ -15,4 +16,8 @@ final fetchHabitUseCaseProvider = Provider<FetchHabitUseCase>((ref) {
 
 final completeHabitUseCaseProvider = Provider<CompleteHabitUseCase>((ref) {
   return CompleteHabitUseCase(ref.watch(habitRepositoryProvider));
+});
+
+final deleteHabitUseCaseProvider = Provider<DeleteHabitUseCase>((ref) {
+  return DeleteHabitUseCase(ref.watch(habitRepositoryProvider));
 });

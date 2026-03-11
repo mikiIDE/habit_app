@@ -27,6 +27,12 @@ class HabitListNotifier extends Notifier<List<Habit>> {
     await ref.read(completeHabitUseCaseProvider).execute(habit);
     await fetchHabits();
   }
+
+  // 習慣を削除して、一覧を再取得
+  Future<void> deleteHabit(String id) async {
+    await ref.read(deleteHabitUseCaseProvider).execute(id);
+    await fetchHabits();
+  }
 }
 
 // UIから使うためのProvider
